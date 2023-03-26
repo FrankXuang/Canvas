@@ -6,10 +6,85 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border: 5px solid #000;
+        }
+    </style>
 </head>
 
 <body>
+    <canvas id="mycanvas"></canvas>
 
+
+
+
+
+    <script>
+        var canvas = document.getElementById('mycanvas');
+        var ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+
+
+        //路徑開始 beginPath/closePath
+        // ctx.beginPath();
+        //移動畫線 moveTo/lineTo/arc
+        // ctx.moveTo(100, 100);
+        // ctx.lineTo(500, 100);
+        // ctx.lineTo(300, 400);
+        // ctx.closePath();
+
+        //指定填色 fillStyle/ strokeStyle?
+        // ctx.fillStyle = 'red';
+        // ctx.fill();
+        // 最後把路徑填色或描繪出來 stroke/fill
+        // ctx.strokeStyle = 'black';
+        // ctx.lineWidth = 10;
+        // ctx.stroke();
+
+        //setinterval(update,time)
+        //requestAnimationFrame(update)
+        //使用clearRect或fillRect 覆蓋上次繪製的圖形
+        //坐標系的轉移fillRect(每個圖形的座標不同原點)
+        // ctx.fillRect(0, 0, 200, 200);
+
+        // translate(dx,dy)相對當下位置偏移
+        // scale(dx,dy)相對原點縮放
+        // rotate(angle)相對原點旋轉
+
+
+        // 保存與還原save()/restore() 先進後出
+        // test();
+        // function test() {
+        //     ctx.save();
+        //     for (var i = 0; i < 7; i++) {
+        //         ctx.fillRect(0, 0, 50, 50);
+        //         ctx.translate(50, 10);
+
+        //     }
+        //     ctx.restore();
+        // }
+        test2();
+        function test2() {
+            ctx.save();
+            for (var i = 0; i < 7; i++) {
+                ctx.fillRect(0, 0, 50, 50);
+                ctx.translate(50, 10);
+
+            }
+            ctx.restore();
+        }
+    </script>
 </body>
 
 </html>
