@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+        1. canvas標籤
+        2. 獲取畫筆對象
+        3. 使用canvas的api進行繪畫
+     -->
+
+    <!-- 默認300*150 -->
+    <!-- 與其他元素不一樣，需使用屬性的方式設置 -->
+    <canvas class="" width="600" height="400" id="canvas"></canvas>
+
+
+
+    <script>
+        //1.獲取標籤
+        const canvas = document.getElementById('canvas');
+        //2.獲取context(畫筆)對象
+        const context = canvas.getContext('2d');
+        //3.劃出想要圖形
+        //4.畫一個方形有專門api fillRect(x,y,width,height)
+        context.fillRect(100, 100, 200, 200);
+
+
+
+    </script>
+</body>
+
+</html>
