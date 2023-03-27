@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //2. context對象
+        const context = canvas.getContext('2d');
+
+        //畫笑臉
+        //3.1大臉
+        context.arc(300, 200, 100, 0, 2 * Math.PI);
+        context.stroke();
+        //畫左眼
+        //在兩個不相關圖形之間需要告訴context，重新生成
+        context.beginPath();
+        context.arc(250, 150, 20, 0, 2 * Math.PI);
+        context.stroke();
+        //配合API，閉合路徑
+        context.closePath();
+
+        //右眼
+        context.beginPath();
+        context.arc(350, 150, 20, 0, 2 * Math.PI);
+        context.stroke();
+        //配合API，閉合路徑
+        context.closePath();
+
+        //鼻子
+        context.beginPath();
+        context.arc(300, 200, 20, 0, 2 * Math.PI);
+        context.stroke();
+        //配合API，閉合路徑
+        context.closePath();
+
+        //嘴巴
+        context.beginPath();
+        context.arc(300, 200, 80, 0, Math.PI);
+        context.stroke();
+        //配合API，閉合路徑
+        context.closePath();
+    </script>
+</body>
+
+</html>

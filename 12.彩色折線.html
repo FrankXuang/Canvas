@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //2. context對象
+        const context = canvas.getContext('2d');
+        //加粗
+        context.lineWidth = 20;
+        //實現漸變
+        let g = context.createLinearGradient(100, 100, 500, 100);
+        g.addColorStop(0, 'yellow');
+        g.addColorStop(0.25, 'orange');
+        g.addColorStop(0.5, 'pink');
+        g.addColorStop(1, 'purple');
+        //漸變賦予畫筆
+        context.strokeStyle = g;
+        //3.折線畫出來
+        context.moveTo(100, 200);
+        context.lineTo(200, 100);
+        context.lineTo(400, 50);
+        context.lineTo(400, 200);
+        context.lineTo(500, 100);
+
+        context.stroke();
+    </script>
+</body>
+
+</html>

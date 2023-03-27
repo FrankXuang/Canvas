@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //畫圓弧
+
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //2. context對象
+        const context = canvas.getContext('2d');
+
+        //畫圓弧(x,y,半徑,起始弧度,結束弧度,默認順時針false)
+        context.arc(300, 300, 50, 0 * Math.PI / 180, 180 * Math.PI / 180, false);
+        context.stroke();
+    </script>
+</body>
+
+</html>
