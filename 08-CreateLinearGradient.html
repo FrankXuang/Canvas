@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //2. context對象
+        const context = canvas.getContext('2d');
+
+        //3.使用線性漸變
+        //3.1創建
+        const gradient = context.createLinearGradient(0, 0, 600, 400);
+        //3.2顏色從開始到變色
+        // gradient.addColorStop(offset,color);
+        gradient.addColorStop(0, 'red');
+        //中間顏色(offset0~1之間
+        gradient.addColorStop(0.25, 'yellow');
+        gradient.addColorStop(0.5, 'pink');
+        gradient.addColorStop(0.7, 'aqua');
+        //3.3 到甚麼顏色結束
+        gradient.addColorStop(1, 'blue');
+
+        //畫線
+        context.moveTo(0, 0);
+        context.lineTo(400, 400);
+        context.lineWidth = 20;
+        //漸變賦予
+        context.strokeStyle = gradient;
+        context.stroke();
+    </script>
+</body>
+
+</html>

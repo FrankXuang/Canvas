@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* canvas {
+            width: 400px;
+            height: 400px;
+        } */
+    </style>
+</head>
+
+<body>
+    <script>
+        //canvas元素為了正常顯示裡面的圖形，需要使用屬性來控制寬高
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 400;
+        var ww = canvas.width;
+        var wh = canvas.height;
+        document.body.append(canvas);
+        const ctx = canvas.getContext('2d');
+        ctx.fillRect(100, 100, 100, 100);
+
+
+
+        function draw() {
+            ctx.fillStyle = '#001D2E';
+            ctx.fillRect(0, 0, ww, wh);
+            let span = 50;
+            ctx.beginPath();
+            for (var i = 0; i < ww; i += span) {
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, wh);
+            }
+            for (var i = 0; i < wh; i += span) {
+                ctx.moveTo(0, i);
+                ctx.lineTo(ww, i);
+            }
+            ctx.stroke();
+        }
+        // draw();
+    </script>
+</body>
+
+</html>
