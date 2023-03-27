@@ -15,9 +15,9 @@ var gui = new dat.GUI()
 gui.add(controls, "value", -2, 2).step(0.01).onChange(function (value) { })
 
 document.getElementById('musicBg').play()
-document.getElementById('musicBg').volume = 0.5
-document.getElementById('transmiting').volume = 0.2
-document.getElementById('step').volume = 0.3
+document.getElementById('musicBg').volume = 0.1
+document.getElementById('transmiting').volume = 0.1
+document.getElementById('step').volume = 0.1
 document.getElementById('musicBg').addEventListener('ended', function () {
     this.currentTime = 0;
     this.play();
@@ -25,63 +25,115 @@ document.getElementById('musicBg').addEventListener('ended', function () {
 
 //------------------------
 // Vec2
+//ES6
+// class Vec2 {
+//     // constructor建構一個二維向量
+//     constructor(x, y) {
+//         this.x = x
+//         this.y = y
+//     }
+//     //設定屬性值
+//     set(x, y) {
+//         this.x = x
+//         this.y = y
+//     }
+//     //將向量中的屬性值分別傳入
+//     move(x, y) {
+//         this.x += x
+//         this.y += y
+//     }
+//     // 返回一個新的向量，其 x 和 y 屬性值分別為原向量的 x 和 y 屬性值加上參數 v 的 x 和 y 屬性值
+//     add(v) {
+//         return new Vec2(this.x + v.x, this.y + v.y)
+//     }
+//     //返回一個新的向量，其 x 和 y 屬性值分別為原向量的 x 和 y 屬性值減去參數 v 的 x 和 y 屬性值
+//     sub(v) {
+//         return new Vec2(this.x - v.x, this.y - v.y)
+//     }
+//     //返回一個新的向量，其 x 和 y 屬性值分別為原向量的 x 和 y 屬性值乘上參數 s 的值
+//     mul(s) {
+//         return new Vec2(this.x * s, this.y * s)
+//     }
+//     //返回向量的長度
+//     get length() {
+//         return Math.sqrt(this.x * this.x + this.y * this.y)
+//     }
+//     //設定向量的長度，並保持方向不變
+//     set length(nv) {
+//         let temp = this.unit.mul(nv)
+//         this.set(temp.x, temp.y)
+//     }
+//     //返回一個新的向量，其 x 和 y 屬性值與原向量相同
+//     clone() {
+//         return new Vec2(this.x, this.y)
+//     }
+//     //返回一個字串，表示向量的 x 和 y 屬性值
+//     toString() {
+//         return `(${this.x}, ${this.y})`
+//     }
+//     //判斷參數 v 的 x 和 y 屬性值是否與原向量相同
+//     equal(v) {
+//         return this.x == v.x && this.y == v.y
+//     }
+//     //返回向量的極角（返回以弧度表示，範圍 [-π, π] ）
+//     get angle() {
+//         return Math.atan2(this.y, this.x)
+//     }
+//     //返回一個新的單位向量，其方向與原向量相同
+//     get unit() {
+//         return this.mul(1 / this.length)
+//     }
 
-class Vec2 {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-    }
-    set(x, y) {
-        this.x = x
-        this.y = y
-    }
-    move(x, y) {
-        this.x += x
-        this.y += y
-    }
-    add(v) {
-        return new Vec2(this.x + v.x, this.y + v.y)
-    }
-    sub(v) {
-        return new Vec2(this.x - v.x, this.y - v.y)
-    }
-    mul(s) {
-        return new Vec2(this.x * s, this.y * s)
-    }
-    get length() {
-        return Math.sqrt(this.x * this.x + this.y * this.y)
-    }
-    set length(nv) {
-        let temp = this.unit.mul(nv)
-        this.set(temp.x, temp.y)
-    }
-    clone() {
-        return new Vec2(this.x, this.y)
-    }
-    toString() {
-        return `(${this.x}, ${this.y})`
-    }
-    equal(v) {
-        return this.x == v.x && this.y == v.y
-    }
-    get angle() {
-        return Math.atan2(this.y, this.x)
-    }
-    get unit() {
-        return this.mul(1 / this.length)
-    }
+// }
+//ES5
+function Vec2(x, y) {
+    this.x = x;
+    this.y = y;
+}
+Vec2.prototype.set = function (x, y) {
+    this.x = x;
+    this.y = y;
+}
+Vec2.prototype.move = function (x, y) {
+    this.x += x;
+    this.y += y;
+}
+Vec2.prototype.add = function (v) {
+    return new Vec2(this.x + v.x, this.y + v.y);
 
 }
+Vec2.prototype.sub = function (v) {
+    return new Vec2(this.x - v.x, this.y - v.y);
+}
+Vec2.prototype.mul = function (v) {
+    return new Vec2(this.x * v, this.y * v);
+}
+Vec2.prototype.clone = function () {
+    return new Vec2(this.x, this.y);
+}
+Object.defineProperty(Vec2.prototype, 'length', {
+    get: function () {
+        //Math.sqrt平方根
+        return Math.sqrt(this.x * this.x, this.y * this.y);
+    },
+    set: function () {
+        var temp = this.unit.mul(1 / this.length);
+        // this.set(temp.x, temp.y);
+    }
+})
+
+
+
 
 //------
 var canvas = document.getElementById("mycanvas")
 var ctx = canvas.getContext("2d")
 ctx.circle = function (v, r) {
-    this.arc(v.x, v.y, r, 0, Math.PI * 2)
+    this.arc(v.x, v.y, r, 0, Math.PI * 2);
 }
 ctx.line = function (v1, v2) {
-    this.moveTo(v1.x, v1.y)
-    this.lineTo(v2.x, v2.y)
+    this.moveTo(v1.x, v1.y);
+    this.lineTo(v2.x, v2.y);
 }
 
 function playSound(id) {
@@ -93,23 +145,23 @@ function playSound(id) {
 //遊戲物件
 class Game {
     constructor() {
-        this.player = null
-        this.walls = []
-        this.width = 700
-        this.height = wh
+        this.player = null;
+        this.walls = [];
+        this.width = 700;
+        this.height = wh;
         this.walltypes = [
             "normal", "jump", "slideLeft", "slideRight",
             "hurt", "fade"
-        ]
-        this.hurt = 0
-        this.playing = false
+        ];
+        this.hurt = 0;
+        this.playing = false;
         this.keystatus = {
             left: false,
             right: false,
             up: false,
             down: false,
-        }
-        this.time = 0
+        };
+        this.time = 0;
     }
     init() {
         //初始化先推一些牆壁進去
@@ -187,6 +239,8 @@ class Game {
                 this.player.bloodDelta(-4)
                 this.player.v.y = 2
                 this.player.p.y = 10
+
+                //tweenmax為套件需用link
                 TweenMax.to(this, 0.5, { hurt: 0 })
             }
         }

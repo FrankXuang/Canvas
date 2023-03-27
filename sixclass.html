@@ -31,10 +31,40 @@
         var canvas = document.getElementById('mycanvas');
         var ctx = canvas.getContext('2d');
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        var ww = window.innerWidth;
+        var wh = window.innerHeight;
+        canvas.width = ww;
+        canvas.height = wh;
+
+        var obj = {
+            x: 0, y: 0
+        }
 
 
+        function draw() {
+            //清掉前面(後面範圍)
+            ctx.fillStyle = 'rgba(0,0,0,100)';
+            ctx.clearRect(0, 0, ww, wh);
+            obj.x += 5;
+            obj.y += 5;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(obj.x, obj.y, 50, 50);
+        }
+        draw();
+        setInterval(draw, 30);
+
+        function touch() {
+            // if ()
+        }
+
+
+        // ctx.translate(100, 100);
+        // ctx.fillRect(0, 0, 50, 50);
+        // ctx.translate(100, 100);
+        // ctx.fillRect(0, 0, 50, 50);
+        // ctx.translate(100, 100);
+        // ctx.fillRect(0, 0, 50, 50);
+        // ctx.translate(100, 100);
 
         //路徑開始 beginPath/closePath
         // ctx.beginPath();
@@ -74,16 +104,16 @@
         //     }
         //     ctx.restore();
         // }
-        test2();
-        function test2() {
-            ctx.save();
-            for (var i = 0; i < 7; i++) {
-                ctx.fillRect(0, 0, 50, 50);
-                ctx.translate(50, 10);
+        // test2();
+        // function test2() {
+        //     ctx.save();
+        //     for (var i = 0; i < 7; i++) {
+        //         ctx.fillRect(0, 0, 50, 50);
+        //         ctx.translate(50, 10);
 
-            }
-            ctx.restore();
-        }
+        //     }
+        //     ctx.restore();
+        // }
     </script>
 </body>
 
