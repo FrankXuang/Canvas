@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .test {
+            /* width: 100%;
+            height: 100%;
+            margin: 0; */
+        }
+
+        canvas {
+            /* width: 80%;
+            height: 80%; */
+            border: 5px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test">
+
+    </div>
+    <script>
+        var test = document.getElementsByClassName('test');
+
+        var mycanvas = document.createElement('canvas');
+        mycanvas.width = 400;
+        mycanvas.height = 600;
+        var ww = mycanvas.width;
+        var wh = mycanvas.height;
+        test[0].append(mycanvas);
+
+        var ctx = mycanvas.getContext('2d');
+        var ball = {
+            x: 100,
+            y: 100,
+            vx: 25,
+            vy: 25,
+            radius: 25,
+            color: 'blue',
+            deg: 0,
+            draw: function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            // draw: function () { }
+
+        };
+        function init() {
+            // ball.deg = 0;
+        }
+        function update() {
+            // ball.x += ball.vx;
+            // ball.y += ball.vy;
+            // ball.x = Math.random() * ww;
+            // ball.y = Math.random() * wh;
+            // if (ball.x > ww + ball.radius) {
+            //     ball.x = -ball.radius;
+            // }
+            // if (ball.y > wh + ball.radius) {
+            //     ball.y = -ball.radius;
+            // }
+            let nextX = ball.x + ball.vx;
+            let nextY = ball.y + ball.vy;
+            if (nextX + ball.radius > ww || nextX - ball.radius < 0) {
+                // || ball.x + ball.vx < 0
+                ball.vx = -ball.vx;
+                ball.x += ball.vx;
+            }
+            else if (nextX + ball.radius < ww || nextX > 0) {
+                ball.x += ball.vx;
+            }
+            if (nextY + ball.radius > wh || nextY - ball.radius < 0) {
+                // || ball.y + ball.vy < 0
+                ball.vy = -ball.vy;
+                ball.y += ball.vy;
+            }
+            else if (nextY + ball.radius < wh || nextY > 0) {
+                ball.y += ball.vy;
+            }
+        }
+
+        function draw() {
+            clear();
+            ball.draw();
+            requestAnimationFrame(draw);
+
+        }
+        function clear() {
+            ctx.fillStyle = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+
+            ctx.clearRect(0, 0, ww, wh);
+        }
+        init();
+        draw();
+        let fps = 60;
+        setInterval(update, 1000 / fps);
+        requestAnimationFrame(draw);
+
+
+        // ball.draw();
+    </script>
+</body>
+
+</html>

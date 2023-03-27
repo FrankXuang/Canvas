@@ -35,27 +35,112 @@
         var wh = window.innerHeight;
         canvas.width = ww;
         canvas.height = wh;
-
+        var ship = {
+            x: 100,
+            y: 100,
+            deg: 0,
+            radius: 25,
+            draw: function () {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
         var obj = {
             x: 0, y: 0
         }
 
 
-        function draw() {
-            //清掉前面(後面範圍)
-            ctx.fillStyle = 'rgba(0,0,0,100)';
-            ctx.clearRect(0, 0, ww, wh);
-            obj.x += 5;
-            obj.y += 5;
-            ctx.fillStyle = 'red';
-            ctx.fillRect(obj.x, obj.y, 50, 50);
-        }
-        draw();
-        setInterval(draw, 30);
+        // function draw() {
+        //     //清掉前面(後面範圍)
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        //     ctx.clearRect(0, 0, ww, wh);
+        //     obj.x += 5;
+        //     obj.y += 5;
+        //     ctx.fillStyle = 'red';
+        //     ctx.fillRect(obj.x, obj.y, 50, 50);
+        // }
+        // draw();
+        // setInterval(draw, 30);
 
-        function touch() {
-            // if ()
+        // function touch() {
+        //     if (obj.x + 50 >= ww || obj.x <= 0) {
+        //         // 碰到視窗寬度時改變 x 方向
+        //         dx = -dx;
+        //     }
+        //     if (obj.y + 50 >= wh || obj.y <= 0) {
+        //         // 碰到視窗高度時改變 y 方向
+        //         dy = -dy;
+        //     }
+        //     obj.x += dx;
+        //     obj.y += dy;
+        // }
+
+        //方形四處跑
+        // function init() {
+        //     ship.deg = 45;
+        // }
+        // function update() {
+        //     ship.x += 0.1;
+        //     ship.y += 0.5;
+        //     ship.x = Math.random() * ww;
+        //     ship.y = Math.random() * wh;
+        // }
+        // function draw() {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(0, 0, ww, wh);
+
+        //     ctx.fillStyle = 'white';
+        //     ctx.fillRect(ship.x, ship.y, 50, 50);
+
+        //     requestAnimationFrame(draw);
+        // }
+        // init();
+        // let fps = 60;
+        // setInterval(update, 1000 / fps);
+        // requestAnimationFrame(draw);
+
+        function init() {
+            ship.deg = 45;
         }
+        function update() {
+            ship.x += 0.1;
+            ship.y += 0.5;
+            ship.x = Math.random() * ww;
+            ship.y = Math.random() * wh;
+        }
+        function draw() {
+            ctx.fillStyle = '#001D2E';
+            ctx.fillRect(0, 0, ww, wh);
+            ctx.beginPath();
+            // for (var i = 0; i < ww; i += 20) {
+            //     // ctx.moveTo(i, 0);
+            //     // ctx.lineTo(i, wh);
+
+            //     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+            //     ctx.closePath();
+            //     ctx.fillStyle = this.color;
+            //     ctx.fill();
+            // }
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
+            ctx.closePath();
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            ctx.fillStyle = 'white';
+            ctx.fillRect(ship.x, ship.y, 50, 50);
+
+            requestAnimationFrame(draw);
+        }
+        init();
+        let fps = 60;
+        setInterval(update, 10000 / fps);
+        requestAnimationFrame(draw);
+
+
 
 
         // ctx.translate(100, 100);
