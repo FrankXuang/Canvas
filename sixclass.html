@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"> </script>
     <style>
         body {
             height: 100%;
@@ -35,22 +36,100 @@
         var wh = window.innerHeight;
         canvas.width = ww;
         canvas.height = wh;
-        var ship = {
-            x: 100,
-            y: 100,
-            deg: 0,
-            radius: 25,
-            draw: function () {
+
+        let degToPi = Math.PI * 2 / 360;
+        class Ship {
+            constructor(args) {
+                //{x:3}
+                let def = {
+                    x: 0,
+                    y: 0,
+                    deg: 50 * degToPi,
+                    r: 50,
+                }
+                Object.assign(def, args);
+                Object.assign(this, def);
+            }
+            draw() {
+                ctx.save();
+                // ctx.translate(ww / 2, wh / 2);
+                //先轉
+                ctx.rotate(this.deg);
+                //砲台
+                ctx.fillStyle = 'white';
+                ctx.fillRect(100, -25 / 2, 25, 25);
+
+                //船(圓形)
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.fillStyle = this.color;
-                ctx.fill();
+                ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 20;
+
+                //發光
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = 'white';
+
+                ctx.stroke();
+                //轉120度            
+                for (var i = 0; i < 3; i++) {
+                    //中心到空心圓一條線
+                    ctx.lineWidth = 5;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    // ctx.lineTo(0, -ship.r);
+                    ctx.lineTo(0, -this.r);
+                    ctx.stroke();
+                    ctx.rotate(Math.PI * 2 / 3);
+                }
+                ctx.restore();
             }
         }
-        var obj = {
-            x: 0, y: 0
+
+        //子彈
+        class Bullect {
+            constructor(args) {
+                //{x:3}
+                let def = {
+                    x: 0,
+                    y: 0,
+                    v: {
+                        x: 0,
+                        y: 0,
+                    },
+                }
+                Object.assign(def, args);
+                Object.assign(this, def);
+            }
+            update() {
+                this.x += this.v.x;
+                this.y += this.v.y;
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, 10, 10);
+                ctx.restore();
+            }
         }
+
+        //船定義
+        var ship, ship2, ship3;
+
+        //子彈新增
+        // var b;
+
+
+        // var ship = {
+        //     x: 100,
+        //     y: 100,
+        //     deg: 0,
+        //     r: 70,
+
+        // }
+        // var obj = {
+        //     x: 0, y: 0
+        // }
 
 
         // function draw() {
@@ -104,31 +183,99 @@
         // requestAnimationFrame(draw);
 
         function init() {
-            ship.deg = 45;
+            ship = new Ship({
+                deg: 150 * degToPi,
+                r: 120,
+            });
+            // ship2 = new Ship({
+            //     deg: 45 * degToPi,
+            //     r: 50,
+            // });
+            // ship3 = new Ship({
+            //     deg: 45 * degToPi,
+            //     r: 250,
+            // });
+
+            //子彈一顆
+            // b = new Bullect({
+            //     x: 50,
+            //     y: 50,
+            //     v: {
+            //         x: 5,
+            //         y: 5,
+            //     }
+            // })
+            // ship.x = Math.random() * ww;
+            // ship.y = Math.random() * wh;
         }
+
+        var time = 0;
+        var bullects = [];
         function update() {
-            ship.x += 0.1;
-            ship.y += 0.5;
-            ship.x = Math.random() * ww;
-            ship.y = Math.random() * wh;
+            //自己旋轉
+            // ship.x += 0.1;
+            // ship.y += 0.5;
+            // ship.deg += 0.5;
+
+            //事件旋轉
+            // ship.deg = mousePos.x / 50;
+            if (time % 100 == 0) {
+                TweenMax.to(ship, 1, {
+                    deg: ship.deg + Math.PI
+                });
+            }
+            // b.update();
+            time++;
+            // console.log(time);
+            if (time % 30 == 0) {
+                console.log('add bullect')
+                let b = new Bullect({
+                    x: ww / 2 + Math.cos(ship.deg) * ship.r,
+                    y: wh / 2 + Math.sin(ship.deg) * ship.r,
+                    v: {
+                        x: Math.cos(ship.deg) * 10,
+                        y: Math.sin(ship.deg) * 10,
+                    }
+                })
+                bullects.push(b);
+            }
+            bullects.forEach(b => b.update());
+            // console.log(mousePos);
+
         }
         function draw() {
             ctx.fillStyle = '#001D2E';
             ctx.fillRect(0, 0, ww, wh);
-            ctx.beginPath();
-            // for (var i = 0; i < ww; i += 20) {
-            //     // ctx.moveTo(i, 0);
-            //     // ctx.lineTo(i, wh);
 
-            //     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-            //     ctx.closePath();
-            //     ctx.fillStyle = this.color;
-            //     ctx.fill();
-            // }
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
-            ctx.closePath();
-            ctx.fillStyle = this.color;
-            ctx.fill();
+            //格線
+            let span = 50;
+            ctx.beginPath();
+            for (var i = 0; i < ww; i += span) {
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, wh);
+
+            }
+            for (var i = 0; i < wh; i += span) {
+                ctx.moveTo(0, i);
+                ctx.lineTo(ww, i);
+
+            }
+            // ctx.strokeStyle = 'white';
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.stroke();
+
+            //主體製作(原save位置後續移至物件)
+            ctx.save();
+            ctx.translate(ww / 2, wh / 2);
+
+            ship.draw();
+            // ship2.draw();
+            // ship3.draw();
+
+            ctx.restore();
+
+            // b.draw();
+            bullects.forEach(b => b.draw());
 
             ctx.fillStyle = 'white';
             ctx.fillRect(ship.x, ship.y, 50, 50);
@@ -137,10 +284,17 @@
         }
         init();
         let fps = 60;
-        setInterval(update, 10000 / fps);
+        setInterval(update, 3000 / fps);
         requestAnimationFrame(draw);
 
-
+        var mousePos = {
+            x: 0, y: 0
+        }
+        canvas.addEventListener('mousemove', function () {
+            // console.log(event.x, event.y);
+            mousePos.x = event.x;
+            mousePos.y = event.y;
+        })
 
 
         // ctx.translate(100, 100);
