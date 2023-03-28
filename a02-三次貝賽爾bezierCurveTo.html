@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //bezierCurveTo
+        //貝賽爾(控制點(拉長線的焦點),控制點,控制點(拉長線的焦點),控制點,終點,終點)控制點*2
+
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //判斷是否有getContext
+        // if (!context.getContext) { console.log('無'); }
+
+        //2. context對象
+        const context = canvas.getContext('2d');
+
+        //3.畫
+        context.beginPath();
+        context.moveTo(300, 200);
+        //兩控制點一終點
+        context.bezierCurveTo(350, 150, 400, 200, 300, 270);
+        context.bezierCurveTo(200, 200, 250, 150, 300, 200);
+
+        context.stroke();
+        context.closePath();
+
+    </script>
+</body>
+
+</html>

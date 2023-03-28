@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //bezierCurveTo
+        //貝賽爾(控制點(拉長線的焦點),控制點,控制點(拉長線的焦點),控制點,終點,終點)控制點*2
+
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        canvas.width = 600;
+        canvas.height = 400;
+        document.body.append(canvas);
+        //判斷是否有getContext
+        // if (!context.getContext) { console.log('無'); }
+
+        //2. context對象
+        const context = canvas.getContext('2d');
+
+
+        var heartPath = new Path2D();
+
+        console.log(heartPath);
+        //3.畫
+        // context.beginPath();
+        heartPath.moveTo(300, 200);
+        //兩控制點一終點
+        heartPath.bezierCurveTo(350, 150, 400, 200, 300, 270);
+        heartPath.bezierCurveTo(200, 200, 250, 150, 300, 200);
+
+        context.stroke(heartPath);
+        // context.closePath();
+
+        var chat = new Path2D();
+        chat.moveTo(200, 300);
+        //貝賽爾(控制點(拉長線的焦點),控制點,終點,終點)
+        //左下
+        chat.quadraticCurveTo(150, 300, 150, 200);
+        //左上
+        chat.quadraticCurveTo(150, 100, 300, 100);
+        //右上
+        chat.quadraticCurveTo(450, 100, 450, 200);
+        //右下
+        chat.quadraticCurveTo(450, 300, 250, 300);
+        //突出去
+        chat.quadraticCurveTo(250, 350, 150, 350);
+        //連回去
+        // context.quadraticCurveTo(150, 300, 150, 300);
+        chat.quadraticCurveTo(200, 350, 200, 300);
+        // context.lineTo(200, 300);
+
+        context.stroke(chat);
+
+        context.fillStyle = 'blue';
+        context.fill(heartPath);
+        //創建新的
+        var polyline = new Path2D('M10 10 h 80 v 80 h -80 z');
+        context.stroke(polyline);
+
+    </script>
+</body>
+
+</html>
