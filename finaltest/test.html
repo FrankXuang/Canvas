@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+            margin: 0 auto;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+
+        </div>
+    </div>
+    <script>
+        const canvas = document.createElement('canvas');
+        const row = document.getElementsByClassName('row');
+        canvas.width = 800;
+        canvas.height = 800;
+        const ww = canvas.width;
+        const wh = canvas.height;
+        row[0].append(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const mapImage = new Image();
+        mapImage.src = './img/Package_Marketplace/atlas_48x.png';
+        mapImage.onload = () => {
+            // 設定每個區塊的大小
+            const blockWidth = mapImage.width / 4;
+            const blockHeight = mapImage.height / 3;
+
+            // 將每個區塊畫到 Canvas 上
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 3; j++) {
+                    // 取得要畫的區塊的座標及大小
+                    const sx = i * blockWidth;
+                    const sy = j * blockHeight;
+                    const sw = blockWidth;
+                    const sh = blockHeight;
+
+                    // 取得要畫的位置座標及大小
+                    const dx = i * blockWidth;
+                    const dy = j * blockHeight;
+                    const dw = blockWidth;
+                    const dh = blockHeight;
+
+                    // 畫圖
+                    ctx.drawImage(mapImage, sx, sy, sw, sh, dx, dy, dw, dh);
+                }
+            }
+        };
+        var span = 50;
+        function draw() {
+            ctx.fillStyle = 'blanchedalmond';
+            ctx.fillRect(0, 0, ww, wh);
+
+            ctx.beginPath();
+            // for (var i = span; i <= ww - span; i += span) {
+            //     ctx.moveTo(i, span);
+            //     ctx.lineTo(i, wh - span);
+            // }
+            // for (var i = span; i <= wh - span; i += span) {
+            //     ctx.moveTo(span, i);
+            //     ctx.lineTo(ww - span, i);
+            // }
+            for (var i = 0; i < 16; i++) {
+                //橫線
+                ctx.moveTo(0, span * i);
+                ctx.lineTo(ww, span * i);
+                ctx.stroke();
+                //縱線
+                ctx.moveTo(span * i, 0);
+                ctx.lineTo(span * i, wh);
+                ctx.stroke();
+            }
+            ctx.strokeStyle = 'black';
+            // ctx.closePath();
+        }
+        draw();
+
+
+    </script>
+</body>
+
+</html>
