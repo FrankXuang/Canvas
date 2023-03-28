@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        canvas {
+            /* width: 100%;
+            height: 100%; */
+            /* border: 5px solid #000; */
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        var ww = canvas.width = window.innerWidth;
+        var wh = canvas.height = window.innerHeight;
+        document.body.append(canvas);
+        //2. context對象
+        const ctx = canvas.getContext('2d');
+
+        function drawVector(v, trans) {
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.save();
+            ctx.rotate(v.angle());
+            ctx.fillText(v, v.length() / 2, 10);
+            ctx.lineTo(v.length(), 0);
+            ctx.lineTo(v.length() - 5, -4);
+            ctx.lineTo(v.length() - 5, 4);
+            ctx.lineTo(v.length(), 0);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.restore();
+            if (trans) {
+                ctx.translate(v.x, v.y);
+            }
+        }
+        function draw() {
+            ctx.clearRect(0, 0, ww, wh);
+            var v1 = new Vector(250, 0);
+            var v2 = new Vector(0, 200);
+            var v3 = v1.add(v2).mul(-1);
+
+            var c = new Vector(ww / 2, wh / 2);
+            ctx.restore();
+            ctx.save();
+            ctx.translate(c.x, c.y);
+            var md = mousePos.sub(c);
+
+            // drawVector(mousePos.sub(c), false);
+            //單位向量
+            drawVector(md.mul(1 / md.length()).mul(100), false);
+            ctx.restore();
+            // ctx.translate(ww / 2, wh / 2);
+            // drawVector(v1, true);
+            // drawVector(v2, true);
+            // drawVector(v3, true);
+
+        }
+        //若直接使用draw會出現因向量在下面
+        setInterval(draw, 30);
+        var mousePos;
+        canvas.addEventListener('mousemove', function (e) {
+            mousePos = new Vector(e.x, e.y);
+            // console.log('m:' + mousePos);
+        })
+
+        console.clear();
+        var Vector = function (x, y) {
+            this.x = x
+            this.y = y
+        }
+        Vector.prototype.move = function (x, y) {
+            this.x += x
+            this.y += y
+            return this
+        }
+        Vector.prototype.add = function (v) {
+            return new Vector(this.x + v.x, this.y + v.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.sub = function (v) {
+            return new Vector(this.x - v.x, this.y - v.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.mul = function (s) {
+            return new Vector(this.x * s, this.y * s);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.length = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.toString = function (v) {
+            return "(" + this.x + "," + this.y + ")";
+            //不用vector直接用this會修改掉原座標
+        }
+
+        var a = new Vector(4, 0);
+        var b = new Vector(0, 3);
+        var c = a.add(b);
+        var c2 = a.add(b);
+        var c3 = a.sub(b);
+
+
+        // console.log(a);
+        // console.log(b);
+        // console.log(c);
+        // console.log(c2);
+        // console.log(c3);
+        // console.log(a + '+' + b + '=' + c);
+
+        var b2 = b.mul(2);
+        // console.log(b2);
+        // console.log(c);
+        // console.log(c + '的長度=' + c.length());
+        // console.log(b2 + '的長度=' + b2.length());
+        // console.log(c2 + '的長度=' + c2.length());
+
+        Vector.prototype.set = function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this
+        }
+        Vector.prototype.equal = function (v) {
+            return (this.x == v.x) && (this.y == v.y);
+        }
+        Vector.prototype.clone = function (v) {
+            return new Vector(this.x, this.y);
+        }
+        Vector.prototype.angle = function (v) {
+            return Math.atan2(this.y, this.x);
+            //弧度
+            //yx相反
+        }
+
+
+
+
+
+        var temp = new Vector(4, 3);
+        // console.log(c + '跟' + temp + '依樣嗎' + c.equal(temp));
+
+
+        var newa = a.clone();
+        newa.move(3, 0);
+        // console.log(a);
+        // console.log(newa);
+
+
+    </script>
+</body>
+
+</html>

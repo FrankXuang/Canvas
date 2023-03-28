@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="../dat.gui-master/build/dat.gui.min.js"></script>
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            /* height: 100%; */
+            /* border: 5px solid #000; */
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        //1.創建canvas標籤
+        const canvas = document.createElement('canvas');
+        var ww = canvas.width = window.innerWidth;
+        var wh = canvas.height = window.innerHeight;
+        document.body.append(canvas);
+        //2. context對象
+        const ctx = canvas.getContext('2d');
+
+        var Vector = function (x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        Vector.prototype.move = function (x, y) {
+            this.x += x;
+            this.y += y;
+            return this;
+        }
+        Vector.prototype.add = function (v) {
+            return new Vector(this.x + v.x, this.y + v.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.sub = function (v) {
+            return new Vector(this.x - v.x, this.y - v.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.mul = function (s) {
+            return new Vector(this.x * s, this.y * s);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.length = function () {
+            return Math.sqrt(this.x * this.x + this.y * this.y);
+            //不用vector直接用this會修改掉原座標
+        }
+        Vector.prototype.toString = function (v) {
+            return "(" + this.x + "," + this.y + ")";
+            //不用vector直接用this會修改掉原座標
+        }
+
+        Vector.prototype.set = function (x, y) {
+            this.x = x;
+            this.y = y;
+            return this
+        }
+        Vector.prototype.equal = function (v) {
+            return (this.x == v.x) && (this.y == v.y);
+        }
+        Vector.prototype.clone = function (v) {
+            return new Vector(this.x, this.y);
+        }
+        Vector.prototype.angle = function (v) {
+            return Math.atan2(this.y, this.x);
+            //弧度
+            //yx相反
+        }
+        //??
+        window.addEventListener("resize", function () {
+            ww = canvas.width = window.innerWidth;
+            wh = canvas.height = window.innerHeight;
+        })
+
+        //球體生成
+        var Ball = function () {
+            this.p = new Vector(ww / 2, wh / 2);
+            this.v = new Vector(-10, 3);
+            this.a = new Vector(0, 1);
+            this.r = 50;
+            this.dragging = false;
+        }
+        Ball.prototype.draw = function () {
+            ctx.beginPath();
+            ctx.save();
+            ctx.translate(this.p.x, this.p.y);
+            ctx.arc(0, 0, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = controls.color;
+            ctx.fill()
+            ctx.restore()
+
+            this.drawV()
+        }
+        Ball.prototype.drawV = function () {
+            ctx.beginPath()
+            ctx.save()
+            ctx.translate(this.p.x, this.p.y)
+            ctx.scale(3, 3)
+            ctx.moveTo(0, 0)
+            ctx.lineTo(this.v.x, this.v.y)
+            ctx.strokeStyle = "blue"
+            ctx.stroke()
+
+            ctx.beginPath()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(this.v.x, 0)
+            ctx.strokeStyle = "red"
+            ctx.stroke()
+
+            ctx.beginPath()
+            ctx.moveTo(0, 0)
+            ctx.lineTo(0, this.v.y)
+            ctx.strokeStyle = "green"
+            ctx.stroke()
+
+
+            ctx.restore()
+        }
+        Ball.prototype.update = function () {
+            if (this.dragging == false) {
+                this.p = this.p.add(this.v)
+                this.v = this.v.add(this.a)
+                this.v = this.v.mul(controls.fade)
+
+                //new dat
+                controls.vx = this.v.x
+                controls.vy = this.v.y
+                controls.ay = this.a.y
+
+                this.checkBoundary()
+
+
+            }
+        }
+        Ball.prototype.checkBoundary = function () {
+            if (this.p.x + this.r > ww) {
+                this.v.x = -Math.abs(this.v.x)
+            }
+            if (this.p.x - this.r < 0) {
+                this.v.x = Math.abs(this.v.x)
+            }
+            if (this.p.y + this.r > wh) {
+                this.v.y = -Math.abs(this.v.y)
+            }
+            if (this.p.y - this.r < 0) {
+                this.v.y = Math.abs(this.v.y)
+            }
+        }
+
+
+        var controls = {
+            vx: 0,
+            vy: 0,
+            ay: 0.6,
+            fade: 0.99,
+            update: true,
+            color: "#fff",
+            step: function () {
+                ball.update()
+            },
+            FPS: 30
+        }
+        var gui = new dat.GUI()
+        gui.add(controls, "vx", -50, 50).listen().onChange(function (value) {
+            ball.v.x = value
+        })
+        gui.add(controls, "vy", -50, 50).listen().onChange(function (value) {
+            ball.v.y = value
+        })
+        gui.add(controls, "ay", -1, 1).step(0.001).listen().onChange(function (value) {
+            ball.a.y = value
+        })
+        gui.add(controls, "fade", 0, 1).step(0.01).listen()
+        gui.add(controls, "update")
+        gui.addColor(controls, "color")
+        gui.add(controls, "step")
+        gui.add(controls, "FPS", 1, 120)
+
+        var ball;
+        function init() {
+            ball = new Ball()
+        }
+        init()
+        function update() {
+            if (controls.update) {
+                ball.update()
+
+            }
+        }
+        setInterval(update, 1000 / 30)
+        function draw() {
+            ctx.fillStyle = "rgba(0,0,0,0.5)"
+            ctx.fillRect(0, 0, ww, wh)
+
+            ball.draw()
+
+            setTimeout(draw, 1000 / controls.FPS)
+        }
+        draw()
+
+
+        let mousePos = { x: 0, y: 0 }
+
+        function getDistance(p1, p2) {
+            let temp1 = p1.x - p2.x
+            let temp2 = p1.y - p2.y
+            let dist = Math.pow(temp1, 2) + Math.pow(temp2, 2)
+            return Math.sqrt(dist)
+        }
+
+        canvas.addEventListener("mousedown", function (evt) {
+            mousePos = new Vector(evt.x, evt.y)
+            // console.log(mousePos)
+            let dist = mousePos.sub(ball.p).length()
+            console.log(dist)
+            if (dist < ball.r) {
+                console.log("ball clicked")
+                ball.dragging = true
+            }
+        })
+
+        canvas.addEventListener("mousemove", function (evt) {
+            let nowPos = new Vector(evt.x, evt.y)
+            if (ball.dragging) {
+                let delta = nowPos.sub(mousePos)
+                ball.p = ball.p.add(delta)
+                ball.v = delta.clone()
+
+            }
+            let dist = getDistance(nowPos, ball.p)
+            if (dist < ball.r) {
+                canvas.style.cursor = "move"
+            } else {
+                canvas.style.cursor = "initial"
+
+            }
+
+            mousePos = nowPos
+        })
+        canvas.addEventListener("mouseup", function (evt) {
+            ball.dragging = false
+        })
+    </script>
+</body>
+
+</html>
