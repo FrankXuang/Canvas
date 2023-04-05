@@ -184,6 +184,7 @@ initCanvas()
 //地圖
 //除24定義格子寬度以確保在裡面
 var WSPAN = Math.min(ww, wh) / 24;
+
 //再20*20定義位置
 function GETPOS(i, o) {
     let sourceV = getVec2(arguments);
@@ -195,7 +196,268 @@ function GETPOS(i, o) {
 }
 
 
+//定位(這一個物件到底在哪裡)
+//有兩個座標(1. io格子座標 2.實際上繪圖)
+class GameObject {
+    //物件
+    constructor(args) {
+        //建議物件def
+        let def = {
+            //兩座標確認
+            p: Vec2.ZERO,
+            gridP: Vec2.ZERO,
+        }
+        Object.assign(def, args);
+        Object.assign(this, def);
+        //轉換
+        this.p = GETPOS(this.gridP);
+    }
+    //碰撞
+    collide(gobj) {
+        return this.p.sub(gobj.p).length < WSPAN;
+    }
+}
 
+//食物
+class Food extends GameObject {
+    constructor(args) {
+        super(args);
+        //確認食物是否被吃掉/大力丸
+        let def = {
+            eaten: false,
+            super: false,
+        }
+        Object.assign(def, args);
+        Object.assign(this, def);
+    }
+
+    //前期角色位置定位，後續角色圖形出來覆蓋
+    draw() {
+        if (!this.eaten) {
+            save(() => {
+                translate(this.p);
+                setFill('#f99595');
+                if (this.super) {
+                    //大力丸
+                    //閃爍
+                    if (time % 10 < 5) {
+                        beginPath();
+                        arc(0, 0, WSPAN / 5, 0, PI(2));
+                        fill('white');
+                    }
+
+                } else {
+                    //一般
+                    let r = WSPAN / 10;
+                    ctx.fillRect(-r, -r, r * 2, r * 2);
+                }
+
+            })
+        }
+    }
+    get directionAngle() {
+        return Vec2.DIR_ANGLE(this.currentDirection);
+    }
+}
+
+//玩家
+//class玩家 繼承來自GameObject
+class Player extends GameObject {
+    constructor(args) {
+        super(args);
+        //確認角色的是否移動/哪個方向移動/速度
+        let def = {
+            nextDirection: null,
+            currentDirection: null,
+            isMoving: false,
+            speed: 10,
+        }
+        Object.assign(def, args);
+        Object.assign(this, def);
+    }
+
+    //前期角色位置定位，後續角色圖形出來覆蓋
+    draw() {
+        beginPath();
+        circle(this.p, 5);
+        fill('white');
+    }
+    get directionAngle() {
+        return Vec2.DIR_ANGLE(this.currentDirection);
+    }
+
+    //搭配方向事件去確認能否移動
+    moveStep() {
+        //判斷下一格
+        let i0 = this.gridP.x;
+        let o0 = this.gridP.y;
+        //舊方向
+        let oldDirection = this.currentDirection;
+
+        let haveWall = map.getWalls(this.gridP.x, this.gridP.y);
+        //判斷下一步方向是否有牆壁，紀錄非牆壁時可改變方向
+        let avail = ['up', 'down', 'left', 'right'].filter(d => !haveWall[d]);
+
+        //下一個方向
+        //如果下一個指定方向沒有牆面，就更新方向
+        if (!haveWall[this.nextDirection] && this.nextDirection) {
+            this.currentDirection = this.nextDirection;
+        }
+
+        //根據方向更新位置
+        this.gridP = this.gridP.add(Vec2.DIR(this.currentDirection));
+
+        //判斷牆壁不能過去
+        let isWall = map.isWall(this.gridP.x, this.gridP.y)
+        if (!isWall) {
+            this.isMoving = true;
+            let moveStepTime = 10 / this.speed;
+
+            //確認地圖邊界
+            //如果在左右邊界且符合方向 => 瞬間跳躍
+            if (this.gridP.x <= -1 && this.currentDirection == 'left') {
+                this.gridP.x = 18;
+                //取消中間滑動過程
+                moveStepTime = 0;
+            }
+            if (this.gridP.x >= 19 && this.currentDirection == 'right') {
+                this.gridP.x = 0
+                moveStepTime = 0
+            }
+
+
+            TweenMax.to(this.p, moveStepTime, {
+                //...展開(ES6)
+                ...GETPOS(this.gridP),
+                //上式展開等同於下式兩個
+                //x:GETPOS(this.gridP).x,
+                //y:GETPOS(this.gridP).y,
+                ease: Linear.easeNone,
+                //需用箭頭函數才能用this
+                onCopmplete: () => {
+                    this.isMoving = false;
+                    this.moveStep();
+                }
+            })
+            return true
+        } else {
+            //撞到牆壁初始化
+            this.gridP.set(i0, o0);
+            this.currentDirection = oldDirection;
+        }
+
+    }
+}
+
+//小精靈畫圖
+//classPacman 繼承來自Player玩家
+class Pacman extends Player {
+    constructor(args) {
+        super(args);
+        let def = {
+            //小精靈r半徑
+            r: WSPAN / 2,
+            deg: Math.PI / 4,
+
+        }
+        Object.assign(def, args);
+        Object.assign(this, def);
+    }
+    draw() {
+        let useDeg = PI(0.25);
+        useDeg = this.deg;
+        save(() => {
+            translate(this.p);
+            rotate(this.directionAngle);
+            moveTo(Vec2.ZERO);
+            rotate(useDeg);
+            lineTo(this.r, 0);
+            arc(0, 0, this.r, 0, PI(2) - useDeg * 2);
+            closePath();
+            fill('yellow');
+        })
+    }
+}
+
+//鬼畫圖
+//classGhost 繼承來自Player玩家
+class Ghost extends Player {
+    constructor(args) {
+        super(args);
+        let def = {
+            //小精靈r半徑
+            r: WSPAN / 2,
+            color: 'red',
+            isEatable: false,
+            isDead: false,
+            deg: Math.PI / 4,
+
+        }
+        Object.assign(def, args);
+        Object.assign(this, def);
+    }
+    draw() {
+        let useDeg = PI(0.25);
+        useDeg = this.deg;
+        save(() => {
+            translate(this.p);
+            beginPath();
+            arc(0, 0, this.r, PI(), 0);
+            lineTo(this.r, this.r);
+
+            //畫鋸齒狀
+            //時間鋸齒動感
+            let tt = parseInt(time / 3);
+            let ttSpan = this.r * 2 / 7;
+            let ttHeight = this.r / 3;
+            for (var i = 0; i < 7; i++) {
+                lineTo(this.r * 0.9 - ttSpan * i, ((i + tt) % 2 - 1) * ttHeight + this.r);
+            }
+
+            lineTo(-this.r, this.r);
+            closePath();
+
+            fill(this.color);
+
+            //眼睛
+            let eyeR = this.r / 3;
+            let innerEyeR = eyeR / 2;
+            //白白
+            beginPath();
+            arc(-this.r / 2.5, -eyeR, eyeR, 0, PI(2));
+            arc(this.r / 2.5, -eyeR, eyeR, 0, PI(2));
+            fill('white');
+            //為了眼球朝移動方向
+            save(() => {
+                let innerEyePan = Vec2.DIR(this.currentDirection).mul(innerEyeR);
+                translate(innerEyePan);
+                //眼球
+                beginPath();
+                arc(-this.r / 2.5, -eyeR, innerEyeR, 0, PI(2));
+                arc(this.r / 2.5, -eyeR, innerEyeR, 0, PI(2));
+                fill('black');
+            })
+
+        })
+    }
+}
+
+var pacman = new Pacman({
+    gridP: new Vec2(7, 7),
+
+})
+var ghost = new Ghost({
+    gridP: new Vec2(8, 7),
+
+})
+
+//TweenMax
+TweenMax.to(pacman, 0.15, {
+    deg: 0,
+    ease: Linear.easeNone,
+    repeat: -1,
+    yoyo: true,
+})
 
 //畫地圖
 class Map {
@@ -223,6 +485,35 @@ class Map {
             "ooooooooooooooooooo",
 
         ]
+        //初始化
+        this.init();
+    }
+
+    //小精靈/鬼以及食物放至
+    init() {
+        //加食物
+        this.foods = [];
+        for (var i = 0; i < 19; i++) {
+            for (var j = 0; j < 19; j++) {
+                let foodType = this.isFood(i, j);
+                if (foodType) {
+                    let food = new Food({
+                        gridP: new Vec2(i, j),
+                        super: foodType.super,
+                    })
+                    this.foods.push(food);
+                }
+            }
+        }
+    }
+    isFood(i, o) {
+        let type = this.getWallContent(i, o);
+        if (type == '+' || type == " ") {
+            return {
+                super: type == "+",
+            }
+        }
+        return false;
     }
     //牆壁繪圖
     draw() {
@@ -249,7 +540,6 @@ class Map {
                         .join("");
                     // console.log(typecode);
                     if (walltype.none) {
-                        console.log(1);
                         typecode = "";
                     }
                     // typecode = walltype.none ? "" : typecode
@@ -408,6 +698,9 @@ function draw() {
     save(() => {
         translate(ww / 2 - WSPAN * 10, wh / 2 - WSPAN * 10);
         map.draw();
+        map.foods.forEach(food => food.draw());
+        pacman.draw();
+        ghost.draw();
     })
 
 
@@ -464,3 +757,13 @@ function mousedown(evt) {
     mousePos.set(evt.x, evt.y)
     mousePosDown = mousePos.clone()
 }
+//抓取鍵盤
+window.addEventListener('keydown', function (evt) {
+    //按上下左右為ArrowUP/ArrowDown/ArrowLeft/ArrowRight
+    //需取出方向並轉換成小寫設定下一個方向
+    // console.log(evt.key);
+    pacman.nextDirection = evt.key.replace('Arrow', '').toLowerCase();
+    if (!pacman.isMoving) {
+        pacman.moveStep();
+    }
+})
