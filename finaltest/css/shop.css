@@ -1,0 +1,134 @@
+/* ==================== layout ==================== */
+#container {
+    /* width: 1000px; */
+    margin: auto;
+}
+
+#main {
+    /* width: 1000px; */
+    /* float: left; */
+}
+
+#sidebar01 {
+    width: 100px;
+    float: left;
+    margin: 30px 0;
+}
+
+#content {
+    /* width: 500px; */
+    /* height: 700px; */
+    /* float: left; */
+    margin: 30px 10px;
+}
+
+
+
+#dropZone {
+    width: 300px;
+    height: 450px;
+    float: right;
+    margin: 30px 10px;
+    background-color: pink;
+    border: 1px solid blue;
+    overflow: auto
+}
+
+#foot {
+    clear: both;
+}
+
+
+/* ==================== header ==================== */
+#header {
+    width: auto;
+    height: 200px;
+    background-image: url(../image/header.jpg);
+}
+
+#header_inner {
+    padding: 20px;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 2em;
+    font-family: Verdana, Helvetica, sans-serif;
+}
+
+#header p {
+    margin: 0;
+    margin-top: 8px;
+    font-size: 1em;
+}
+
+
+
+/* ==================== sidebar ==================== */
+.menu {
+    width: auto;
+    font-size: 0.75em;
+}
+
+.menu li {
+    border-bottom: solid 1px #aaaaaa;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+    list-style-type: none;
+}
+
+.menu li a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.menu li a:hover {
+    color: #ff8800
+}
+
+.menu ul {
+    margin: 0;
+    padding: 0;
+    border-top: solid 1px #aaaaaa;
+    padding-top: 8px;
+}
+
+
+/* ==================== body ==================== */
+
+#table2 {
+    border: 1px solid green;
+    /* width: 300px; */
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid green;
+    border-bottom: 3px double red;
+}
+
+
+#table2 td {
+    border: 1px solid green;
+}
+
+.thumb {
+    height: 75px;
+    margin: 5px;
+}
+
+
+/* ==================== footer ==================== */
+#footer {
+    width: auto;
+    border-top: solid 5px #b8e964;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+#footer p {
+    color: #000000;
+    font-size: 0.75em;
+    margin: 0;
+}

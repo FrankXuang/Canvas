@@ -29,7 +29,7 @@ function draw() {
 }
 
 tilesetImage.onload = function () {
-    layers = defaultState;
+    // layers = defaultState;
     draw();
     setLayer(0);
 }

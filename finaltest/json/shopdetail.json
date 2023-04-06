@@ -1,0 +1,39 @@
+[
+    {
+        "p_ID": 1,
+        "p_Name": "經典款一",
+        "p_img": "1.jpg",
+        "p_price": "NT$ 2500",
+        "p_describe": "HENSON SHAVING 航空鋁刮鬍刀｜完美30°剃刀設計、超輕量38g、前所未有的舒適刮鬍感！"
+    },
+    {
+        "p_ID": 2,
+        "p_Name": "經典款二",
+        "p_img": "2.jpg",
+        "p_price": "NT$ 1200",
+        "p_describe": "【美國HITCH易取 雙享保溫瓶｜時尚Ｘ環保Ｘ便利Ｘ省空間】富比世雜誌專欄推薦，眾多好萊塢明星愛用",
+        "dayLeft": 29,
+        "percent": "763%"
+    },
+    {
+        "p_ID": 3,
+        "p_Name": "經典款三",
+        "p_img": "3.jpg",
+        "p_price": "NT$ 1500",
+        "p_describe": "【 P O P I 】PRAZOR-I 裝甲機械刮鬍刀|模組化變裝|●旅行●商務●戶外皆展現硬派本格"
+    },
+    {
+        "p_ID": 4,
+        "p_Name": "經典款四",
+        "p_img": "4.jpg",
+        "p_price": "NT$ 2000",
+        "p_describe": "【 P O P I 】PRAZOR-I 裝甲機械刮鬍刀|模組化變裝|●旅行●商務●戶外皆展現硬派本格"
+    },
+    {
+        "p_ID": 5,
+        "p_Name": "經典款五",
+        "p_img": "5.jpg",
+        "p_price": "NT$ 2000",
+        "p_describe": "【美國HITCH易取 雙享保溫瓶｜時尚Ｘ環保Ｘ便利Ｘ省空間】富比世雜誌專欄推薦，眾多好萊塢明星愛用"
+    }
+]
